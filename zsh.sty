@@ -1,0 +1,73 @@
+\usepackage[french]{babel}
+\usepackage[export]{adjustbox}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{emoji}
+\usepackage{environ}
+\usepackage{luacode}
+\usepackage{fontspec}
+\setmonofont{Hack-Regular.ttf}
+
+\begin{luacode}
+    -- Initialiser le temps actuel
+    local current_time = os.time()
+
+    -- Fonction pour ajouter une minute et renvoyer la chaîne de l'heure
+    function ajouter_une_minute()
+    -- Ajouter une minute au temps actuel
+    current_time = current_time + 60
+
+    -- Formater le temps en une chaîne représentant l'heure (HH:MM:SS)
+    local heure = os.date("%H:%M:%S", current_time)
+
+    tex.print(heure)
+    end
+\end{luacode}
+
+\usetikzlibrary{matrix}
+
+% \setmonofont{[]}
+
+\definecolor{bouttonGauche}{HTML}{7DD1C8}
+\definecolor{bouttonDroite1}{HTML}{FDC92D}
+\definecolor{bouttonDroite2}{HTML}{28D33F}
+\definecolor{bouttonDroite3}{HTML}{FE6254}
+\definecolor{chevron}{HTML}{72DF55}
+\definecolor{bleuZsh}{HTML}{0A8BC9}
+\definecolor{timezsh}{HTML}{7D94AE}
+
+\newcommand{\pictureInLine}[1]{%
+    \begingroup\normalfont
+
+    \includegraphics[height=\fontcharht\font`\B]{#1}%
+    \endgroup
+}
+
+\newcommand{\zshCommand}[1]{%
+    \vphantom{1cm}\\
+    \textcolor{bleuZsh}{\(\sim\)}\hfill
+    \textcolor{timezsh}{\directlua{ajouter_une_minute()}}  \\
+    \textcolor{chevron}{>}\(\;\;\)#1\\
+}
+
+\newcommand{\zshResponse}[1]{%
+    \vphantom{1cm}\\
+    #1
+    \vphantom{1cm}\\
+}
+
+\NewEnviron{zsh}{%
+    \begin{tikzpicture}
+    \matrix [draw=black, line width=.1pt, matrix of nodes, text width=\linewidth,
+        rounded corners=7pt, inner sep=2pt, font=\ttfamily\scriptsize] {
+        \normalsize\pictureInLine{term.png}
+        \textcolor{bouttonGauche}{\Large\(\bullet\)} 
+        \hfill \scriptsize zsh \hfill 
+        \textcolor{bouttonDroite1}{\Large\(\bullet\)}
+        \textcolor{bouttonDroite2}{\Large\(\bullet\)}
+        \textcolor{bouttonDroite3}{\Large\(\bullet\)}\\
+        \BODY
+        \vphantom{}\\
+    };
+  \end{tikzpicture}
+}
