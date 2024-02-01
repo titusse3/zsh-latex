@@ -9,12 +9,12 @@
 \usepackage{xparse}
 \usepackage{ifthen} % Nécessaire pour \ifthenelse
 \setmonofont{Hack-Regular.ttf}
+\usetikzlibrary{matrix}
 
 \begin{luacode}
     dofile("zsh_script.lua")
 \end{luacode}
 
-\usetikzlibrary{matrix}
 
 % \setmonofont{[]}
 
@@ -25,6 +25,12 @@
 \definecolor{chevron}{HTML}{72DF55}
 \definecolor{bleuZsh}{HTML}{0A8BC9}
 \definecolor{timezsh}{HTML}{7D94AE}
+\definecolor{oldComzsh}{HTML}{2DA56E}
+
+\definecolor{passionLine}{HTML}{2AA1B3}
+\definecolor{oneBracket}{HTML}{C01C28}
+\definecolor{twoBracket}{HTML}{A2734C}
+\definecolor{threeBracket}{HTML}{32A771}
 
 \newcommand{\pictureInLine}[1]{%
     \begingroup\normalfont
@@ -33,40 +39,44 @@
     \endgroup
 }
 
-\NewDocumentCommand{\zshCommand}{ O{NOERROR} O{TIME} m }{
+\NewDocumentCommand{\zshCommand}{ O{DEFAULT} O{NOERROR} O{TIME} m }{
     \vphantom{1cm}\\
-    \textcolor{bleuZsh}{\(\sim\)}
-    \ifthenelse{\equal{#2}{TIME}}{%
-        \hfill%
-        \textcolor{timezsh}{\directlua{ajouter_une_minute()}}\\%
-    } {%
-        \\
-    }
-    \ifthenelse{\equal{#1}{ERROR}}{%
-        \textcolor{red}{>}%
+    \ifthenelse{\equal{#1}{PASSION}} {\textcolor{passionLine}{[\directlua{get_time_command()}]~~[\textasciitilde]}~~\textcolor{oneBracket}{❱}\textcolor{twoBracket}{❱}\textcolor{threeBracket}{❱}
     }{%
-        \textcolor{chevron}{>}%
+        \textcolor{bleuZsh}{\(\sim\)}
+        \ifthenelse{\equal{#3}{TIME}}{%
+            \hfill%
+            \textcolor{timezsh}{\directlua{get_time_command()}}\\%
+        } {%
+            \\
+        }
+        \ifthenelse{\equal{#2}{ERROR}}{%
+            \textcolor{red}{>}%
+        }{%
+            \textcolor{chevron}{>}%
+        }
     }
-    \(\;\;\)#3\\
+    \(\;\;\)#4\\
 }
 
-\newcommand{\zshResponse}[1]{%
-    \vphantom{1cm}\\
-    #1
-    \vphantom{1cm}\\
+\NewDocumentCommand{\zshResponse}{ O{DEFAULT} m O{} }{
+    \\
+    \ifthenelse{\equal{#1}{PASSION}} {
+        \textcolor{passionLine}{[\directlua{get_time_command()}]~~[const 0.\directlua{test()}s]}\(\;\;\)\textcolor{oldComzsh}{#3}
+    } {}#2\\
 }
 
 \NewEnviron{zsh}{%
     \begin{tikzpicture}
     \matrix [draw=black, line width=.1pt, matrix of nodes, text width=\linewidth,
-        rounded corners=7pt, inner sep=2pt, font=\ttfamily\scriptsize] {
+        rounded corners=5pt, inner sep=2pt, font=\ttfamily\scriptsize] {
         \normalsize\pictureInLine{term.png}
         \textcolor{bouttonGauche}{\Large\(\bullet\)} 
         \hfill \scriptsize zsh \hfill 
         \textcolor{bouttonDroite1}{\Large\(\bullet\)}
         \textcolor{bouttonDroite2}{\Large\(\bullet\)}
         \textcolor{bouttonDroite3}{\Large\(\bullet\)}\\
-        \BODY
+        \noindent\BODY
         \vphantom{}\\
     };
   \end{tikzpicture}
