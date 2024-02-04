@@ -12,12 +12,10 @@ function get_time_command()
     tex.print(heure)
 end
 
--- function get_exec_time_command()
---     if old_random != -1 then
---         tex.print(old_random)
---     end
--- end
-
 function test()
     tex.print(old_random)
+end
+
+function replace_newlines(str)
+    return string.gsub(str, "\n", "\\\\\n")
 end

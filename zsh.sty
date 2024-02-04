@@ -1,22 +1,19 @@
-\usepackage[french]{babel}
 \usepackage[export]{adjustbox}
-\usepackage{tikz}
 \usepackage{xcolor}
-\usepackage{emoji}
-\usepackage{environ}
-\usepackage{luacode}
+\usepackage{listings}
 \usepackage{fontspec}
-\usepackage{xparse}
+\usepackage{tcolorbox}
+\usepackage{luacode}
 \usepackage{ifthen} % Nécessaire pour \ifthenelse
-\setmonofont{Hack-Regular.ttf}
-\usetikzlibrary{matrix}
+
 
 \begin{luacode}
     dofile("zsh_script.lua")
 \end{luacode}
 
+\setmonofont{Hack-Regular.ttf}
+% \usepackage{zsh}
 
-% \setmonofont{[]}
 
 \definecolor{bouttonGauche}{HTML}{7DD1C8}
 \definecolor{bouttonDroite1}{HTML}{FDC92D}
@@ -39,9 +36,28 @@
     \endgroup
 }
 
+\lstset{
+    backgroundcolor=\color{white},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=false,
+    rulecolor=\color{black},
+    showstringspaces=false,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    linewidth=\linewidth,
+    language=bash,
+    escapeinside={@*}{*@},
+    title={\parbox{\linewidth}{\normalsize\pictureInLine{term.png}
+    \textcolor{bouttonGauche}{\Large\(\bullet\)} 
+    \hfill\scriptsize\ttfamily zsh \hfill 
+    \textcolor{bouttonDroite1}{\Large\(\bullet\)}
+    \textcolor{bouttonDroite2}{\Large\(\bullet\)}
+    \textcolor{bouttonDroite3}{\Large\(\bullet\)}}}
+}
+
 \NewDocumentCommand{\zshCommand}{ O{DEFAULT} O{NOERROR} O{TIME} m }{
-    \vphantom{1cm}\\
-    \ifthenelse{\equal{#1}{PASSION}} {\textcolor{passionLine}{[\directlua{get_time_command()}]~~[\textasciitilde]}~~\textcolor{oneBracket}{❱}\textcolor{twoBracket}{❱}\textcolor{threeBracket}{❱}
+    \\
+    \ifthenelse{\equal{#1}{PASSION}} {\textcolor{passionLine}{[\directlua{get_time_command()}]~[\textasciitilde]}~\textcolor{oneBracket}{❱}\textcolor{twoBracket}{❱}\textcolor{threeBracket}{❱}
     }{%
         \textcolor{bleuZsh}{\(\sim\)}
         \ifthenelse{\equal{#3}{TIME}}{%
@@ -55,29 +71,7 @@
         }{%
             \textcolor{chevron}{>}%
         }
-    }
-    \(\;\;\)#4\\
+    }#4\vspace{5pt}
 }
 
-\NewDocumentCommand{\zshResponse}{ O{DEFAULT} m O{} }{
-    \\
-    \ifthenelse{\equal{#1}{PASSION}} {
-        \textcolor{passionLine}{[\directlua{get_time_command()}]~~[const 0.\directlua{test()}s]}\(\;\;\)\textcolor{oldComzsh}{#3}
-    } {}#2\\
-}
-
-\NewEnviron{zsh}{%
-    \begin{tikzpicture}
-    \matrix [draw=black, line width=.1pt, matrix of nodes, text width=\linewidth,
-        rounded corners=5pt, inner sep=2pt, font=\ttfamily\scriptsize] {
-        \normalsize\pictureInLine{term.png}
-        \textcolor{bouttonGauche}{\Large\(\bullet\)} 
-        \hfill \scriptsize zsh \hfill 
-        \textcolor{bouttonDroite1}{\Large\(\bullet\)}
-        \textcolor{bouttonDroite2}{\Large\(\bullet\)}
-        \textcolor{bouttonDroite3}{\Large\(\bullet\)}\\
-        \noindent\BODY
-        \vphantom{}\\
-    };
-  \end{tikzpicture}
-}
+\newcommand{\zshEndLine}[1]{\textcolor{passionLine}{[\directlua{get_time_command()}]~[cost 0.\directlua{test()}s]}\(\;\;\)\textcolor{oldComzsh}{#1}}
